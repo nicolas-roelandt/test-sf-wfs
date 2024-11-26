@@ -2,6 +2,7 @@
 title: "Test to read data from WFS server with sf"
 author: Nicolas Roelandt
 date: today
+license: "This work is dedicated to the Public Domain"
 ---
 
 ```{r}

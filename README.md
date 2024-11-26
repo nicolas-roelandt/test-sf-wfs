@@ -11,3 +11,7 @@ renv::restore()
 ```bash
 quarto render index.qmd
 ```
+
+# Licence
+
+This work is dedicated to the Public Domain
