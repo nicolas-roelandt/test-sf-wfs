@@ -1,0 +1,118 @@
+---
+title: "Test to read data from WFS server with sf"
+author: Nicolas Roelandt
+date: today
+license: "This work is dedicated to the Public Domain"
+---
+
+```{r}
+#| label: setup
+
+library(sf)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+wfs_url <- "WFS:https://data.geopf.fr/wfs/wfs?service=wfs&version=2.0.0&REQUEST=GetFeature&TYPENAME=BDTOPO_V3:batiment&BBOX=47.198,-1.575,47.213,-1.522&outputFormat=application/json"
+
+data_wgs84 <- st_read(dsn = wfs_url) |>
+    tibble::rowid_to_column() |> dplyr::select(rowid)# keep only ID
+
+sf::st_crs(data_wgs84)['input']
+```
+
+```{r}
+bbox <- sf::st_bbox(data_wgs84)
+bbox
+```
+
+```{r}
+ggplot(data = data_wgs84) +
+    geom_sf() +
+  geom_rect(xmin = bbox['xmin'], xmax = bbox['xmax'], ymin = bbox['ymin'], ymax = bbox['ymax'], 
+     fill = NA, colour = "black", linewidth = 1.5) 
+```
+
+
+
+
+
+# RGF93CC47
+
+
+
+
+
+```{r}
+data_3947 <- data_wgs84 |> sf::st_transform(sf::st_crs("IGNF:RGF93CC47"))
+sf::st_crs(data_3947)['input']
+```
+
+```{r}
+bbox <- sf::st_bbox(data_3947)
+bbox
+```
+
+```{r}
+ggplot(data = data_3947) +
+    geom_sf() +
+  geom_rect(xmin = bbox['xmin'], xmax = bbox['xmax'], ymin = bbox['ymin'], ymax = bbox['ymax'], 
+     fill = NA, colour = "black", linewidth = 1.5) 
+```
+
+
+
+
+
+
+# RGF93LAMB93
+
+
+
+
+
+```{r}
+data_LAMB93 <- data_wgs84 |> sf::st_transform(sf::st_crs("IGNF:LAMB93"))
+sf::st_crs(data_LAMB93)['input']
+```
+
+```{r}
+bbox <- sf::st_bbox(data_LAMB93)
+bbox
+```
+
+```{r}
+ggplot(data = data_LAMB93) +
+    geom_sf() +
+  geom_rect(xmin = bbox['xmin'], xmax = bbox['xmax'], ymin = bbox['ymin'], ymax = bbox['ymax'], 
+     fill = NA, colour = "black", linewidth = 1.5) 
+```
+
+
+
+
+
+# Data output
+
+
+
+
+```{r}
+sf::st_write(data_wgs84, dsn = 'output_data.gpkg', layer = 'data_wgs84',append=FALSE)
+sf::st_write(data_3947, dsn = 'output_data.gpkg', layer = 'data_3947',append=FALSE)
+```
+
+
+
+
+
+# Session info
+
+
+
+
+```{r}
+xfun::session_info()
+```
+
